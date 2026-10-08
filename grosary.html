@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fresh Grocery Store</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛒</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--g:#1f8a4c;--gd:#145c33;--gs:#e6f4ea;--ac:#ff7a1a;--bg:#f5faf6;--tx:#1d2b23;--mu:#66756b;--ln:#e0eae3}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:'Poppins',system-ui,sans-serif;background:var(--bg);color:var(--tx);line-height:1.5}
+body.lock{overflow:hidden}
+button{font-family:inherit}
+:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+[hidden]{display:none!important}
+
+/* NAVBAR */
+.nav{position:sticky;top:0;z-index:100;background:var(--gd);color:#fff;display:flex;align-items:center;gap:16px;padding:12px clamp(16px,4vw,40px)}
+.logo{font-weight:700;font-size:1.2rem;white-space:nowrap}
+.search{flex:1;max-width:520px;margin:0 auto;position:relative}
+.search input{width:100%;padding:11px 16px 11px 42px;border:0;border-radius:999px;font:inherit;font-size:.92rem;color:var(--tx)}
+.search i{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-style:normal;pointer-events:none}
+.navR{display:flex;align-items:center;gap:10px}
+.greet{font-size:.88rem}
+.wishBtn{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:8px 10px;cursor:pointer;display:flex;align-items:center;gap:6px;font-size:1rem}.wishBtn:hover{background:rgba(255,255,255,.18)}
+.cartBtn{background:#fff;color:var(--gd);border:0;border-radius:999px;padding:8px 8px 8px 16px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:10px}
+.wishBadge{background:var(--ac);color:var(--tx);border-radius:999px;min-width:21px;height:21px;display:grid;place-items:center;font-size:.72rem;font-weight:700;padding:0 5px}.badge{background:var(--ac);color:var(--tx);border-radius:999px;min-width:26px;height:26px;display:grid;place-items:center;font-size:.8rem;font-weight:700;padding:0 7px}
+.badge.bump{animation:bump .35s}
+@keyframes bump{40%{transform:scale(1.4)}}
+.ghost{background:none;color:#fff;border:1.5px solid rgba(255,255,255,.5);border-radius:999px;padding:7px 14px;cursor:pointer;font-weight:500}
+.ghost:hover{background:rgba(255,255,255,.12)}
+
+/* HERO */
+.hero{position:relative;color:#fff;overflow:hidden}
+.track{display:flex;transition:transform .85s cubic-bezier(.65,0,.25,1)}
+.slide{flex:0 0 100%;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:clamp(36px,7vw,72px) clamp(16px,6vw,96px) clamp(60px,8vw,88px);min-height:clamp(340px,42vw,440px)}
+.s1{background:linear-gradient(120deg,var(--gd),var(--g) 70%,#3aa862)}
+.s2{background:linear-gradient(120deg,#b6420a,#e8741a 70%,#f59a3c)}
+.s3{background:linear-gradient(120deg,#0d5c63,#1c8d8a 70%,#3bb3a6)}
+.s4{background:linear-gradient(120deg,#1b3f8a,#2f6bd0 70%,#5b97ec)}
+.s5{background:linear-gradient(120deg,#8c1f4f,#c93d78 70%,#e46a9c)}
+.slide .txt>*{opacity:0;transform:translateX(-48px);transition:opacity .6s,transform .6s}
+.slide.active .txt>*{opacity:1;transform:none}
+.slide .txt>:nth-child(2){transition-delay:.12s}
+.slide .txt>:nth-child(3){transition-delay:.24s}
+.slide .art{opacity:0;transform:translateX(80px) scale(.92);transition:opacity .7s .15s,transform .8s .15s}
+.slide.active .art{opacity:1;transform:none}
+.slide.active .orb{animation:float 4.5s ease-in-out infinite}
+.slide.active .o2{animation-delay:-1.2s}.slide.active .o3{animation-delay:-2.4s}.slide.active .o4{animation-delay:-3.4s}
+@keyframes float{50%{transform:translateY(-12px)}}
+.hnav{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:44px;height:44px;border:0;border-radius:50%;background:rgba(255,255,255,.2);color:#fff;font-size:1.7rem;line-height:1;cursor:pointer}
+.hnav:hover{background:rgba(255,255,255,.35)}
+.hnav.prev{left:14px}.hnav.next{right:14px}
+.dots{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:2}
+.dot{width:10px;height:10px;border:0;border-radius:999px;background:rgba(255,255,255,.5);padding:0;cursor:pointer;transition:width .3s,background .3s}
+.dot.on{width:32px;background:#fff}
+.hero h1{font-size:clamp(2rem,5vw,3.5rem);line-height:1.1;letter-spacing:-.02em;font-weight:800;margin:0 0 14px;max-width:14em}
+.hero p{margin:0 0 24px;max-width:30em;opacity:.92}
+.cta{display:inline-block;background:#fff;color:var(--gd);font-weight:600;text-decoration:none;border-radius:999px;padding:12px 26px}
+.cta:hover{background:var(--gs)}
+.art{position:relative;width:300px;height:260px;flex:none}
+.orb{position:absolute;display:grid;place-items:center;border-radius:50%;background:rgba(255,255,255,.16)}
+.o1{width:150px;height:150px;font-size:70px;left:70px;top:0}
+.o2{width:110px;height:110px;font-size:50px;left:0;top:120px}
+.o3{width:120px;height:120px;font-size:56px;left:170px;top:130px}
+.o4{width:80px;height:80px;font-size:36px;left:215px;top:0}
+
+/* FRESH PICKS (auto-sliding image strip) */
+.picks{max-width:1200px;margin:0 auto;padding:36px 0 0}
+.picks h2{margin:0 clamp(16px,4vw,40px) 2px;font-size:1.4rem}
+.picks .sub{margin:0 clamp(16px,4vw,40px) 12px;color:var(--mu);font-size:.9rem}
+.marq{overflow:hidden;padding:6px 0 10px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
+.mtrack{display:flex;width:max-content;animation:slide 45s linear infinite}
+.marq:hover .mtrack,.marq:focus-within .mtrack{animation-play-state:paused}
+.mset{display:flex}
+@keyframes slide{to{transform:translateX(-50%)}}
+.pick{flex:none;width:176px;margin-right:16px;background:#fff;border:1px solid var(--ln);border-radius:18px;padding:10px}
+.pick .thumb{height:112px}
+.pick:hover .thumb img{transform:scale(1.08)}
+.pick b{display:block;margin-top:8px}
+.pick small{display:block;color:var(--mu)}
+.pick .add{margin-top:8px;padding:6px;font-size:.88rem}
+
+/* SHOP */
+.shop{max-width:1200px;margin:0 auto;padding:32px clamp(16px,4vw,40px) 48px}
+.bar{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:4px 0}
+.chip{white-space:nowrap;border:1.5px solid var(--ln);background:#fff;border-radius:999px;padding:8px 16px;font-weight:500;cursor:pointer}
+.chip:hover{border-color:var(--g)}
+.chip.on{background:var(--g);border-color:var(--g);color:#fff}
+.bar select{padding:9px 14px;border-radius:999px;border:1.5px solid var(--ln);background:#fff;font:inherit;font-size:.9rem}
+.count{color:var(--mu);font-size:.9rem;margin:18px 0 12px}
+#productlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:20px}
+.product{position:relative;overflow:visible}
+.wishHeart{position:absolute;right:10px;top:10px;z-index:3;width:38px;height:38px;border:0;border-radius:50%;background:rgba(255,255,255,.94);box-shadow:0 5px 16px rgba(0,0,0,.12);cursor:pointer;font-size:1.2rem;display:grid;place-items:center;transition:.2s}.wishHeart:hover{transform:scale(1.08)}.wishHeart.on{background:#fff0f0}.wishHeart.on span{color:#e63946}.wishHeart span{line-height:1}
+background:#fff;border:1px solid var(--ln);border-radius:18px;padding:12px;transition:transform .25s,box-shadow .25s}
+.product:hover{transform:translateY(-5px);box-shadow:0 12px 26px rgba(20,92,51,.15)}
+.thumb{position:relative;height:160px;border-radius:12px;overflow:hidden;background:var(--gs)}
+.thumb img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
+.product:hover .thumb img{transform:scale(1.06)}
+.fb{position:absolute;inset:0;display:grid;place-items:center;font-size:56px}
+.tag{position:absolute;top:8px;left:8px;z-index:1;font-size:.72rem;font-weight:600;padding:3px 10px;border-radius:999px;background:#fff;color:var(--gd)}
+.tag.Fruits{background:#ffe9d2;color:#8a4300}.tag.Dairy{background:#e3eeff;color:#1d4a99}.tag.Snacks{background:#fff1bf;color:#6b5200}.tag.Beverages{background:#fbe3ee;color:#9a2556}
+.info{padding:12px 4px 4px}
+.info h3{margin:0;font-size:1.05rem}
+.pr{display:flex;align-items:baseline;gap:6px;margin:2px 0 12px}
+.price{font-size:1.3rem;font-weight:700;color:var(--gd)}
+.unit{font-size:.8rem;color:var(--mu)}
+.add{width:100%;background:#fff;color:var(--gd);border:2px solid var(--g);border-radius:999px;padding:8px;font-weight:600;cursor:pointer}
+.add:hover{background:var(--g);color:#fff}
+.step{display:flex;align-items:center;justify-content:space-between;background:var(--gs);border-radius:999px;padding:3px}
+.step button{width:34px;height:34px;border:0;border-radius:50%;background:var(--g);color:#fff;font-size:1.15rem;cursor:pointer}
+.step span{font-weight:600;min-width:28px;text-align:center}
+.empty{grid-column:1/-1;text-align:center;padding:48px 16px;color:var(--mu)}
+
+/* CART DRAWER */
+.overlay{position:fixed;inset:0;z-index:999;background:rgba(10,30,18,.5);opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+.overlay.open{opacity:1;visibility:visible}
+.wishlistDrawer{position:fixed;right:0;top:0;height:100vh;width:min(430px,94vw);background:#fff;z-index:210;transform:translateX(105%);transition:transform .3s ease;box-shadow:-15px 0 40px rgba(0,0,0,.18);display:flex;flex-direction:column}.wishlistDrawer.open{transform:translateX(0)}.wishBody{padding:18px;overflow:auto;flex:1}.wishItem{display:grid;grid-template-columns:70px 1fr auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--ln)}.wishItem img{width:70px;height:65px;object-fit:contain;background:var(--bg);border-radius:12px}.wishItem b{display:block}.wishItem small{color:var(--mu)}.wishActions{display:flex;gap:7px;margin-top:7px}.wishActions button{border:0;border-radius:9px;padding:6px 9px;cursor:pointer;font:inherit;font-size:.75rem}.wishAdd{background:var(--g);color:#fff}.wishRemove{background:#f4f4f4;color:#555}
+.drawer{position:fixed;top:0;right:0;bottom:0;z-index:1000;width:min(430px,100%);background:#fff;display:flex;flex-direction:column;transform:translateX(100%);visibility:hidden;transition:transform .3s,visibility 0s .3s}
+.drawer.open{transform:none;visibility:visible;transition:transform .3s}
+.dHead{display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-bottom:1px solid var(--ln)}
+.dHead h2{margin:0;font-size:1.2rem}
+.x{width:36px;height:36px;border:0;border-radius:50%;background:var(--gs);cursor:pointer;font-size:1rem}
+.dBody{flex:1;overflow-y:auto;padding:8px 20px}
+.dFoot{padding:16px 20px;border-top:1px solid var(--ln)}
+.row{display:flex;justify-content:space-between;margin-bottom:6px;color:var(--mu)}
+.row.t{color:var(--tx);font-size:1.15rem;font-weight:700;margin-bottom:14px}
+.btn{width:100%;border:0;border-radius:999px;background:var(--g);color:#fff;padding:13px;font-size:1rem;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--gd)}
+.ci{display:flex;gap:12px;align-items:center;padding:14px 0;border-bottom:1px solid var(--ln)}
+.ci .im{position:relative;width:62px;height:62px;border-radius:10px;overflow:hidden;background:var(--gs);flex:none}
+.ci .im img{width:100%;height:100%;object-fit:cover}
+.ci .im .fb{font-size:28px}
+.ci .nm{flex:1;min-width:0}
+.ci .nm b{display:block}
+.ci .nm small{color:var(--mu)}
+.ci .step{width:104px;margin-top:6px}
+.ci .step button{width:28px;height:28px;font-size:1rem}
+.ci .sd{text-align:right}
+.rm{background:none;border:0;color:#c0392b;cursor:pointer;font-size:.8rem;margin-top:6px}
+.emptyCart{text-align:center;padding:48px 0;color:var(--mu)}
+.emptyCart div{font-size:48px}
+
+/* MODALS */
+.modal{position:fixed;inset:0;z-index:2000;background:rgba(10,30,18,.55);display:none;align-items:center;justify-content:center;padding:16px}
+.modal.show{display:flex}
+.mBox{position:relative;background:#fff;border-radius:20px;width:100%;max-width:440px;padding:26px}
+.mBox h2{margin:0 0 4px}
+.mBox .x{position:absolute;top:16px;right:16px}
+.amt{color:var(--gd);font-weight:600;margin-bottom:14px}
+.pay{display:flex;justify-content:space-between;align-items:center;width:100%;background:#fff;border:2px solid var(--ln);border-radius:14px;padding:13px 16px;margin-top:10px;font-size:1rem;cursor:pointer;text-align:left}
+.pay:hover{border-color:var(--g);background:var(--gs)}
+.pay small{color:var(--mu)}
+.pay.main{border-color:var(--g)}
+.ok{width:68px;height:68px;border-radius:50%;background:var(--g);color:#fff;font-size:34px;display:grid;place-items:center;margin:0 auto 14px}
+.done{text-align:center}
+.done .row{justify-content:space-between}
+
+/* DELIVERY ADDRESS */
+#addressModal .mBox{max-height:calc(100vh - 32px);overflow-y:auto}
+.aForm label{display:block;font-size:.82rem;font-weight:600;margin-top:10px}
+.aForm label span{color:var(--mu);font-weight:400}
+.aForm input,.aForm textarea{width:100%;padding:11px 13px;margin-top:4px;border:1.5px solid var(--ln);border-radius:12px;font:inherit;resize:vertical}
+.aForm input:focus,.aForm textarea:focus{border-color:var(--g);outline:0}
+.aForm .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+#addrError{color:#c0392b;font-size:.88rem;min-height:22px;margin-top:6px}
+.deliv{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;background:var(--gs);border-radius:12px;padding:10px 14px;margin-bottom:12px;font-size:.88rem}
+.deliv button{background:none;border:0;color:var(--g);font-weight:600;cursor:pointer;flex:none;font:inherit;font-weight:600}
+
+/* TOASTS */
+#toasts{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:5000;display:flex;flex-direction:column;gap:8px;align-items:center;width:max-content;max-width:92vw}
+.toast{background:var(--tx);color:#fff;padding:10px 18px;border-radius:999px;font-size:.9rem;animation:up .25s}
+@keyframes up{from{opacity:0;transform:translateY(12px)}}
+
+/* AUTH */
+.authPage{position:fixed;inset:0;z-index:3000;display:none;background:#fff}
+.authPage.show{display:flex}
+.authClose{position:absolute;top:16px;right:16px;z-index:1}
+.side{flex:1;background:linear-gradient(135deg,var(--gd),#2a9d5c);color:#fff;display:flex;flex-direction:column;justify-content:center;padding:48px}
+.side h1{font-size:clamp(2rem,3.4vw,3rem);line-height:1.1;margin:0 0 12px;letter-spacing:-.02em}
+.side .em{font-size:44px;letter-spacing:10px;margin-top:20px}
+.main{flex:1;display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+.aBox{width:100%;max-width:370px}
+.aBox h2{margin:0 0 4px}
+.aBox input{width:100%;padding:13px 14px;margin:8px 0;border:1.5px solid var(--ln);border-radius:12px;font:inherit}
+.aBox input:focus{border-color:var(--g);outline:0}
+.pw{position:relative}
+.pw button{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:0;color:var(--g);font-weight:600;cursor:pointer}
+#authError{color:#c0392b;font-size:.88rem;min-height:20px}
+.aBox a{color:var(--g);font-weight:600;text-decoration:none}
+
+footer{background:var(--gd);color:#d4eadb;text-align:center;padding:26px 16px;font-size:.88rem}
+footer b{color:#fff;font-size:1.05rem}
+
+@media(max-width:760px){
+ .art{display:none}
+ .hnav{display:none}
+ .side{display:none}
+ .nav{flex-wrap:wrap;gap:10px}
+ .search{order:3;flex:1 1 100%;max-width:none}
+ .navR{margin-left:auto}
+ .greet{display:none}
+}
+@media(max-width:480px){#productlist{grid-template-columns:repeat(2,1fr);gap:12px}.thumb{height:120px}.logo{font-size:1rem}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}.marq{overflow-x:auto;-webkit-mask-image:none;mask-image:none}.mset.dup{display:none}.slide .txt>*,.slide .art{opacity:1;transform:none}}
+.add:disabled,.step button:disabled{opacity:.5;cursor:not-allowed}
+
+/* ===== PREMIUM GROCERY REDESIGN ===== */
+:root{--shadow:0 14px 35px rgba(20,92,51,.10);--shadow2:0 20px 45px rgba(20,92,51,.16)}
+.nav{box-shadow:0 4px 18px rgba(0,0,0,.10)}
+.logo{letter-spacing:-.02em}
+.hero{background:#145c33;box-shadow:inset 0 -1px rgba(255,255,255,.12)}
+.slide{min-height:clamp(410px,48vw,540px);padding:clamp(42px,7vw,82px) clamp(18px,7vw,110px) clamp(72px,9vw,96px);position:relative}
+.slide:before{content:"";position:absolute;width:430px;height:430px;border-radius:50%;right:-110px;top:-180px;background:rgba(255,255,255,.09);filter:blur(2px)}
+.slide:after{content:"";position:absolute;width:260px;height:260px;border-radius:50%;left:42%;bottom:-180px;background:rgba(255,255,255,.07)}
+.slide .txt{position:relative;z-index:2;max-width:650px}
+.hero h1{font-size:clamp(2.3rem,5.5vw,4.5rem);letter-spacing:-.045em;margin-bottom:18px;text-wrap:balance}
+.hero p{font-size:clamp(.98rem,1.5vw,1.12rem);max-width:580px;line-height:1.8}
+.cta{display:inline-flex;align-items:center;gap:9px;background:#fff;color:var(--gd);font-weight:700;padding:12px 20px;border-radius:999px;box-shadow:0 10px 25px rgba(0,0,0,.12);transition:.25s}
+.cta:after{content:"→";font-size:1.1em}.cta:hover{transform:translateY(-3px);box-shadow:0 15px 30px rgba(0,0,0,.18)}
+.art{position:relative;z-index:2;min-width:300px;width:34vw;height:290px;border-radius:40px;background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(8px);box-shadow:0 25px 55px rgba(0,0,0,.12)}
+.orb{box-shadow:0 16px 30px rgba(0,0,0,.14)!important;border:2px solid rgba(255,255,255,.35)}
+.hnav{box-shadow:0 8px 20px rgba(0,0,0,.15)}
+.dots{bottom:24px}
+/* Category cards */
+.category-section,.offer-section{max-width:1200px;margin:0 auto;padding:56px clamp(16px,4vw,40px) 18px}
+.section-head{text-align:center;margin-bottom:24px}.section-head h2{margin:0;font-size:clamp(1.55rem,3vw,2.15rem);letter-spacing:-.03em}.section-head p{margin:7px 0 0;color:var(--mu)}
+.category-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+.category-card{position:relative;overflow:hidden;min-height:175px;border:1px solid var(--ln);border-radius:22px;padding:22px;background:#fff;cursor:pointer;text-align:left;transition:.28s;box-shadow:0 5px 18px rgba(20,92,51,.06)}
+.category-card:hover{transform:translateY(-7px);box-shadow:var(--shadow2);border-color:rgba(31,138,76,.25)}
+.category-card .cat-icon{font-size:48px;display:block;margin-bottom:20px;transition:.3s}.category-card:hover .cat-icon{transform:scale(1.12) rotate(-4deg)}
+.category-card strong{display:block;font-size:1.05rem}.category-card small{display:block;color:var(--mu);margin-top:3px}.category-card .arrow{position:absolute;right:17px;bottom:16px;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--gs);color:var(--gd);font-weight:800}
+.cat-fruit{background:linear-gradient(145deg,#fff,#fff1e8)}.cat-veg{background:linear-gradient(145deg,#fff,#eaf8ed)}.cat-dairy{background:linear-gradient(145deg,#fff,#edf4ff)}.cat-snack{background:linear-gradient(145deg,#fff,#fff8df)}.cat-drink{background:linear-gradient(145deg,#fff,#fceaf2)}
+/* Offer banner */
+.offer{position:relative;overflow:hidden;border-radius:28px;padding:30px clamp(24px,5vw,54px);display:flex;align-items:center;justify-content:space-between;gap:24px;background:linear-gradient(105deg,var(--gd),var(--g));color:#fff;box-shadow:var(--shadow2)}
+.offer:before,.offer:after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.08)}.offer:before{width:230px;height:230px;right:-70px;top:-120px}.offer:after{width:150px;height:150px;left:45%;bottom:-100px}
+.offer-copy{position:relative;z-index:1}.offer .eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:.72rem;font-weight:800;color:#bff0cb}.offer h2{margin:4px 0 7px;font-size:clamp(1.55rem,3vw,2.35rem);letter-spacing:-.035em}.offer p{margin:0;color:#e5f7e9}.offer-badge{position:relative;z-index:1;background:#fff;color:var(--gd);border-radius:20px;padding:17px 22px;text-align:center;min-width:145px;box-shadow:0 12px 25px rgba(0,0,0,.12)}.offer-badge b{display:block;font-size:1.7rem;line-height:1}.offer-badge span{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+/* Product cards */
+.shop{padding-top:36px}.product{position:relative;overflow:visible}
+.wishHeart{position:absolute;right:10px;top:10px;z-index:3;width:38px;height:38px;border:0;border-radius:50%;background:rgba(255,255,255,.94);box-shadow:0 5px 16px rgba(0,0,0,.12);cursor:pointer;font-size:1.2rem;display:grid;place-items:center;transition:.2s}.wishHeart:hover{transform:scale(1.08)}.wishHeart.on{background:#fff0f0}.wishHeart.on span{color:#e63946}.wishHeart span{line-height:1}
+position:relative;border:1px solid #e4eee7;border-radius:22px;padding:10px;background:#fff;box-shadow:0 5px 18px rgba(20,92,51,.05)}
+.product:hover{transform:translateY(-7px);box-shadow:var(--shadow2)}
+.thumb{height:190px;border-radius:16px;background:linear-gradient(145deg,#f1f8f3,#e5f3e9)}
+.thumb:after{content:"";position:absolute;inset:auto 10% 7px;height:14px;background:rgba(20,92,51,.10);filter:blur(9px);border-radius:50%}
+.thumb img{position:relative;z-index:1}.fb{z-index:1}
+.tag{top:10px;left:10px;box-shadow:0 4px 12px rgba(0,0,0,.07)}
+.product .fresh-badge{position:absolute;top:20px;right:20px;z-index:3;background:#fff;color:var(--gd);font-size:.68rem;font-weight:800;padding:5px 8px;border-radius:999px;box-shadow:0 5px 15px rgba(0,0,0,.10)}
+.info{padding:14px 6px 7px}.info h3{font-size:1.08rem}.pr{margin:5px 0 13px}.price{font-size:1.35rem}.unit{background:#f1f6f2;border-radius:6px;padding:2px 6px}
+.rating{font-size:.78rem;color:#d78b00;margin:4px 0 11px}.rating span{color:var(--mu);margin-left:4px}
+.add{padding:10px;border-radius:12px;background:var(--gd);color:#fff;border-color:var(--gd);transition:.2s}.add:hover{background:var(--g);border-color:var(--g);transform:translateY(-1px)}
+.step{border:1px solid #cfe4d5;padding:3px}.step button{background:var(--gd)}
+/* Professional footer */
+footer{margin-top:45px;text-align:left;padding:48px clamp(20px,6vw,80px) 20px;background:#103f27;color:#bcdac7}
+.footer-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:35px;padding-bottom:35px;border-bottom:1px solid rgba(255,255,255,.13)}
+.footer-brand b{font-size:1.3rem;color:#fff}.footer-brand p{max-width:330px;line-height:1.8;margin:12px 0 0}.footer-col h4{color:#fff;margin:0 0 12px}.footer-col a{display:block;color:#bcdac7;text-decoration:none;margin:8px 0;font-size:.9rem}.footer-col a:hover{color:#fff}.footer-bottom{max-width:1200px;margin:18px auto 0;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;font-size:.8rem}.footer-badges{display:flex;gap:8px;flex-wrap:wrap}.footer-badges span{border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:5px 9px}
+@media(max-width:850px){.art{min-width:230px;width:30vw;height:230px}.category-grid{grid-template-columns:repeat(3,1fr)}.footer-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:650px){.greet{display:none}.wishBtn{padding:8px}.wishBtn .wishText{display:none}
+.slide{justify-content:center;text-align:center}.slide .txt{max-width:100%}.slide p{margin-left:auto;margin-right:auto}.art{display:none}.category-grid{grid-template-columns:repeat(2,1fr)}.category-card{min-height:155px;padding:17px}.offer{align-items:flex-start;flex-direction:column}.offer-badge{align-self:flex-start}.footer-grid{grid-template-columns:1fr 1fr;gap:25px}.footer-brand{grid-column:1/-1}}
+@media(max-width:480px){.category-grid{gap:10px}.category-card{min-height:140px;border-radius:17px}.category-card .cat-icon{font-size:38px;margin-bottom:13px}.category-card strong{font-size:.92rem}.category-card small{font-size:.72rem}.thumb{height:145px}.footer-grid{grid-template-columns:1fr}.footer-brand{grid-column:auto}.footer-bottom{display:block}.footer-bottom>div{margin-top:8px}}
+
+</style>
+</head>
+<body>
+
+<!-- LOGIN / SIGN UP -->
+<div id="authPage" class="authPage">
+  <div class="side">
+    <h1>Fresh groceries,<br>every day.</h1>
+    <div>Sign in to place your order. Your cart is saved and waiting for you.</div>
+    <div class="em" aria-hidden="true">🍎🥕🥛🍪</div>
+  </div>
+  <div class="main">
+    <button class="x authClose" onclick="closeAuth()" aria-label="Close and keep browsing">✕</button>
+    <div class="aBox">
+      <h2>🛒 Fresh Grocery Store</h2>
+      <p id="authTitle" style="color:var(--mu);margin:0 0 10px">Create your account</p>
+      <input type="text" id="authName" placeholder="Full name" autocomplete="name">
+      <input type="email" id="authEmail" placeholder="Email" autocomplete="email">
+      <div class="pw">
+        <input type="password" id="authPassword" placeholder="Password" autocomplete="current-password">
+        <button type="button" id="pwToggle" onclick="togglePw()">Show</button>
+      </div>
+      <div id="authError"></div>
+      <button class="btn" id="authSubmit" onclick="submitAuth()">Sign up</button>
+      <p id="authSwitch" style="text-align:center">Already have an account? <a href="#" onclick="toggleAuth();return false;">Sign in</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<nav class="nav">
+  <div class="logo">🛒 Fresh Grocery</div>
+  <div class="search"><i>🔍</i><input type="search" id="searchBox" placeholder="Search apples, milk, chips…" aria-label="Search products"></div>
+  <div class="navR">
+    <span class="greet" id="greetBox" hidden>Hi, <b id="userName"></b></span>
+    <button class="wishBtn" onclick="showWishlist()" aria-label="Open wishlist">♡ <span class="wishText">Wishlist</span><span class="wishBadge" id="wishCount">0</span></button>
+    <button class="cartBtn" onclick="showCart()" aria-label="Open cart">🛍️ ₹<span id="totalAmount">0</span><span class="badge" id="cartCount">0</span></button>
+    <button class="ghost" id="loginBtn" onclick="openAuth('signin')">Login</button>
+    <button class="ghost" id="logoutBtn" onclick="logout()" hidden>Logout</button>
+  </div>
+</nav>
+
+<!-- HERO (sliding banners) -->
+<header class="hero" id="hero" role="region" aria-roledescription="carousel" aria-label="Featured categories">
+  <div class="track" id="track">
+    <section class="slide s1 active" role="group" aria-roledescription="slide" aria-label="1 of 5">
+      <div class="txt">
+        <h1>Fresh groceries, delivered to your door</h1>
+        <p>Fruits, vegetables, dairy and everyday snacks. Fill your cart and pay with cash when it arrives.</p>
+        <a class="cta" href="#shop" onclick="goCat('all')">Shop now</a>
+      </div>
+      <div class="art" aria-hidden="true"><span class="orb o1">🍎</span><span class="orb o2">🥕</span><span class="orb o3">🥛</span><span class="orb o4">🍌</span></div>
+    </section>
+    <section class="slide s2" role="group" aria-roledescription="slide" aria-label="2 of 5">
+      <div class="txt">
+        <h1>Juicy fruits for your basket</h1>
+        <p>Apples, bananas and oranges, sweet and ready to eat.</p>
+        <a class="cta" href="#shop" onclick="goCat('Fruits')">Shop fruits</a>
+      </div>
+      <div class="art" aria-hidden="true"><span class="orb o1">🍊</span><span class="orb o2">🍌</span><span class="orb o3">🍎</span><span class="orb o4">🍇</span></div>
+    </section>
+    <section class="slide s3" role="group" aria-roledescription="slide" aria-label="3 of 5">
+      <div class="txt">
+        <h1>Vegetables for every meal</h1>
+        <p>Tomatoes, potatoes and carrots for the everyday kitchen.</p>
+        <a class="cta" href="#shop" onclick="goCat('Vegetables')">Shop vegetables</a>
+      </div>
+      <div class="art" aria-hidden="true"><span class="orb o1">🥕</span><span class="orb o2">🍅</span><span class="orb o3">🥔</span><span class="orb o4">🥦</span></div>
+    </section>
+    <section class="slide s4" role="group" aria-roledescription="slide" aria-label="4 of 5">
+      <div class="txt">
+        <h1>Milk and cheese for the morning</h1>
+        <p>Dairy for breakfast, tea and everything in between.</p>
+        <a class="cta" href="#shop" onclick="goCat('Dairy')">Shop dairy</a>
+      </div>
+      <div class="art" aria-hidden="true"><span class="orb o1">🥛</span><span class="orb o2">🧀</span><span class="orb o3">🍳</span><span class="orb o4">🧈</span></div>
+    </section>
+    <section class="slide s5" role="group" aria-roledescription="slide" aria-label="5 of 5">
+      <div class="txt">
+        <h1>Snacks and drinks, sorted</h1>
+        <p>Biscuits, chips, juice and cold drinks for tea breaks and movie nights.</p>
+        <a class="cta" href="#shop" onclick="goCat('Snacks')">Shop snacks</a>
+      </div>
+      <div class="art" aria-hidden="true"><span class="orb o1">🍪</span><span class="orb o2">🍟</span><span class="orb o3">🧃</span><span class="orb o4">🥤</span></div>
+    </section>
+  </div>
+  <button class="hnav prev" id="prevBtn" aria-label="Previous slide">‹</button>
+  <button class="hnav next" id="nextBtn" aria-label="Next slide">›</button>
+  <div class="dots" id="dots"></div>
+</header>
+
+<!-- FRESH PICKS (sliding image strip) -->
+<section class="picks" aria-label="Fresh picks">
+  <h2>Fresh picks</h2>
+  <p class="sub">Slides on its own. Hover to pause, then add anything to your cart.</p>
+  <div class="marq"><div class="mtrack" id="mtrack"></div></div>
+</section>
+
+
+<!-- SHOP BY CATEGORY -->
+<section class="category-section" aria-label="Shop by category">
+  <div class="section-head">
+    <h2>Shop by category</h2>
+    <p>Everything you need, neatly organised.</p>
+  </div>
+  <div class="category-grid">
+    <button class="category-card cat-fruit" onclick="goCat('Fruits')"><span class="cat-icon">🍎</span><strong>Fresh Fruits</strong><small>Sweet & juicy picks</small><span class="arrow">→</span></button>
+    <button class="category-card cat-veg" onclick="goCat('Vegetables')"><span class="cat-icon">🥕</span><strong>Vegetables</strong><small>Fresh everyday essentials</small><span class="arrow">→</span></button>
+    <button class="category-card cat-dairy" onclick="goCat('Dairy')"><span class="cat-icon">🥛</span><strong>Dairy</strong><small>Milk & breakfast favourites</small><span class="arrow">→</span></button>
+    <button class="category-card cat-snack" onclick="goCat('Snacks')"><span class="cat-icon">🍪</span><strong>Snacks</strong><small>Treats for every break</small><span class="arrow">→</span></button>
+    <button class="category-card cat-drink" onclick="goCat('Beverages')"><span class="cat-icon">🥤</span><strong>Beverages</strong><small>Juices & cool drinks</small><span class="arrow">→</span></button>
+  </div>
+</section>
+
+<!-- OFFER BANNER -->
+<section class="offer-section" aria-label="Special offer">
+  <div class="offer">
+    <div class="offer-copy">
+      <div class="eyebrow">Fresh Grocery Special</div>
+      <h2>Fresh picks. Better prices.</h2>
+      <p>Build your everyday basket with quality groceries at friendly prices.</p>
+    </div>
+    <div class="offer-badge"><b>10%</b><span>Fresh deal</span></div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<main class="shop" id="shop">
+  <div class="bar">
+    <div class="chips" id="chips"></div>
+    <select id="sortOption" aria-label="Sort products">
+      <option value="default">Sort by</option>
+      <option value="name">Name</option>
+      <option value="low">Price: low to high</option>
+      <option value="high">Price: high to low</option>
+    </select>
+  </div>
+  <div class="count" id="resultCount"></div>
+  <div id="productlist"></div>
+</main>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <b>🛒 Fresh Grocery Store</b>
+      <p>Fresh groceries, simple shopping and a smoother way to fill your everyday basket.</p>
+    </div>
+    <div class="footer-col"><h4>Shop</h4><a href="#shop" onclick="goCat('all')">All Products</a><a href="#shop" onclick="goCat('Fruits')">Fruits</a><a href="#shop" onclick="goCat('Vegetables')">Vegetables</a><a href="#shop" onclick="goCat('Dairy')">Dairy</a></div>
+    <div class="footer-col"><h4>Categories</h4><a href="#shop" onclick="goCat('Snacks')">Snacks</a><a href="#shop" onclick="goCat('Beverages')">Beverages</a><a href="#shop">Fresh Picks</a><a href="#shop">Special Offers</a></div>
+    <div class="footer-col"><h4>Why us?</h4><a href="#">Fresh products</a><a href="#">Easy shopping</a><a href="#">Secure checkout</a><a href="#">Friendly prices</a></div>
+  </div>
+  <div class="footer-bottom"><span>© 2026 Fresh Grocery Store. All rights reserved.</span><div class="footer-badges"><span>🌿 Fresh</span><span>🛍️ Easy</span><span>✓ Reliable</span></div></div>
+</footer>
+
+<!-- WISHLIST DRAWER -->
+<div id="wishlistOverlay" class="overlay" onclick="closeWishlist()"></div>
+<aside id="wishlistDrawer" class="wishlistDrawer" aria-label="Wishlist">
+  <div class="dHead"><h2>♡ My wishlist</h2><button class="x" onclick="closeWishlist()" aria-label="Close wishlist">✕</button></div>
+  <div class="wishBody" id="wishlistItems"></div>
+</aside>
+
+<!-- CART DRAWER -->
+<div id="overlay" class="overlay" onclick="closeCart()"></div>
+<aside id="drawer" class="drawer" aria-label="Shopping cart">
+  <div class="dHead"><h2>🛒 My cart</h2><button class="x" onclick="closeCart()" aria-label="Close cart">✕</button></div>
+  <div class="dBody" id="cartItems"></div>
+  <div class="dFoot" id="dFoot">
+    <div class="row"><span>Items</span><span id="drawerCount">0</span></div>
+    <div class="row t"><span>Total</span><span>₹<span id="cartTotal">0</span></span></div>
+    <button class="btn" onclick="showPayment()">Place order</button>
+  </div>
+</aside>
+
+<!-- DELIVERY ADDRESS -->
+<div id="addressModal" class="modal">
+  <div class="mBox">
+    <button class="x" onclick="closeAddress()" aria-label="Close">✕</button>
+    <h2>Delivery address</h2>
+    <div class="amt">Where should we deliver your order?</div>
+    <div class="aForm">
+      <label for="addrName">Full name</label>
+      <input id="addrName" type="text" autocomplete="name" maxlength="60">
+      <label for="addrPhone">Mobile number</label>
+      <input id="addrPhone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="10-digit mobile number" maxlength="15">
+      <label for="addrLine">House / flat, street, area</label>
+      <textarea id="addrLine" rows="2" autocomplete="street-address" maxlength="200"></textarea>
+      <label for="addrLandmark">Landmark <span>(optional)</span></label>
+      <input id="addrLandmark" type="text" maxlength="80">
+      <div class="two">
+        <div><label for="addrCity">City</label><input id="addrCity" type="text" autocomplete="address-level2" maxlength="50"></div>
+        <div><label for="addrPin">PIN code</label><input id="addrPin" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="6"></div>
+      </div>
+      <div id="addrError" role="alert"></div>
+      <button class="btn" onclick="saveAddress()">Continue to payment</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAYMENT -->
+<div id="paymentModal" class="modal">
+  <div class="mBox">
+    <button class="x" onclick="closePayment()" aria-label="Close">✕</button>
+    <h2>Select payment method</h2>
+    <div class="amt">Amount to pay: ₹<span id="paymentTotal">0</span></div>
+    <div class="deliv"><div id="delivTo"></div><button onclick="openAddress()">Change</button></div>
+    <button class="pay main" onclick="placeOrder()"><span>💵 Cash on Delivery</span><small>Pay when it arrives</small></button>
+    <button class="pay" onclick="otherPayment('UPI')"><span>📱 UPI</span><small>Not available yet</small></button>
+    <button class="pay" onclick="otherPayment('Credit / Debit Card')"><span>💳 Credit / Debit Card</span><small>Not available yet</small></button>
+    <button class="pay" onclick="otherPayment('Net Banking')"><span>🏦 Net Banking</span><small>Not available yet</small></button>
+  </div>
+</div>
+
+<!-- ORDER SUCCESS -->
+<div id="successModal" class="modal">
+  <div class="mBox done">
+    <div class="ok">✓</div>
+    <h2>Order placed!</h2>
+    <p style="color:var(--mu);margin:0 0 16px">Keep the cash ready when your groceries arrive.</p>
+    <div class="row"><span>Order ID</span><b id="sId"></b></div>
+    <div class="row"><span>Items</span><b id="sItems"></b></div>
+    <div class="row"><span>Payment</span><b>Cash on Delivery</b></div>
+    <div class="row"><span>Deliver to</span><b id="sAddr" style="text-align:right;max-width:65%"></b></div>
+    <div class="row t"><span>Pay on delivery</span><span id="sTotal"></span></div>
+    <button class="btn" onclick="closeSuccess()">Continue shopping</button>
+  </div>
+</div>
+
+<div id="toasts" aria-live="polite"></div>
+
+<script src="api.mock.js"></script>   <!-- temporary: switch back to api.js when the backend is ready -->
+<script src="app.js"></script>
+</body>
+</html>
